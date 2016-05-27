@@ -20,22 +20,9 @@ static ssize_t temp_show(struct kobject *kobj, struct kobj_attribute *attr,
 	return sprintf(buf, "%d\n", temp);
 }
 
-// Funcion para agregar al archivo
-static ssize_t temp_store(struct kobject *kobj, struct kobj_attribute *attr,
-			 const char *buf, size_t count)
-{
-	int ret;
-
-	ret = kstrtoint(buf, 10, &temp);
-	if (ret < 0)
-		return ret;
-
-	return count;
-}
-
 // Propiedades del archivo
 static struct kobj_attribute temp_attribute =
-	__ATTR(temp, 0664, temp_show, temp_store);
+	__ATTR(temp, 0444, temp_show, NULL);
 
 
 int crea_arbol_sysfs()
@@ -82,14 +69,9 @@ int destruye_arbol_sysfs()
 	return 1;
 }
 
-int actualizando_archivo_temp(const char *buf)
+int actualizando_archivo_temp(int temperatura)
 {
-	int ret;
-
-	ret = temp_store(sensor_kobj, &temp_attribute, buf, strlen(buf));
-
-	if(ret != strlen(buf))
-		return 0;
+	temp = temperatura;
 
 	return 1;
 }
