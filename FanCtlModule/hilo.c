@@ -18,7 +18,7 @@ int hilo_function(void *data)
 		printk(KERN_INFO "FanCtlModule: Temperatura %d\n", obtiene_temp());
 		actualizando_archivo_temp(obtiene_temp());
 
-		schedule_timeout_interruptible(HZ);
+		schedule_timeout_interruptible(HZ/2);
 	}
 	return 0;
 }
