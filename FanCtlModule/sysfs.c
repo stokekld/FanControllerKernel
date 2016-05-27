@@ -1,5 +1,6 @@
 #include <linux/sysfs.h>
 #include <linux/kobject.h>
+#include <linux/string.h>
 #include "sysfs.h"
 
 
@@ -77,6 +78,18 @@ int destruye_arbol_sysfs()
 	kobject_put(sensor_kobj);
 	// Destruyendo kset
 	kset_unregister(fc_kset);
+
+	return 1;
+}
+
+int actualizando_archivo_temp(const char *buf)
+{
+	int ret;
+
+	ret = temp_store(sensor_kobj, &temp_attribute, buf, strlen(buf));
+
+	if(ret != strlen(buf))
+		return 0;
 
 	return 1;
 }
