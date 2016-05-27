@@ -37,7 +37,9 @@ int obtiene_temp()
 	int temp = 0;
 
 	if (!IS_ERR(fcm_tz))
+	{
 		thermal_zone_get_temp(fcm_tz, &temp);
+	}
 
 	return temp;
 }

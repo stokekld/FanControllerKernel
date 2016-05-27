@@ -4,6 +4,7 @@
 
 #include "sysfs.h"
 #include "thermal_zone.h"
+#include "hilo.h"
 
 // Inicio del modulo
 int fan_init(void)
@@ -16,6 +17,8 @@ int fan_init(void)
 
 	if(!obtiene_thermal_zone())
 		return -ENODEV;
+
+	crea_hilo();
 	
 	return 0;
 }
@@ -24,6 +27,8 @@ int fan_init(void)
 void fan_cleanup(void)
 {
 	destruye_arbol_sysfs();
+
+	destruye_hilo();
 	
     printk(KERN_INFO "FanCtlModule: Se libero el modulo\n");
 }
