@@ -8,7 +8,7 @@
 #include <linux/init.h>
 
 
-struct thermal_zone_device *tz = NULL;
+struct thermal_zone_device *pos = NULL, *tz;
 extern struct list_head thermal_tz_list;
 
 // kset
@@ -48,7 +48,8 @@ static struct kobj_attribute zone0_attribute =
 // Inicio del modulo
 int fan_init(void)
 {
-	int retval;
+	int retval, temp;
+	//struct thermal_zone_device *pos = NULL;
 
 	printk(KERN_INFO "FanCtlModule: Se cargo el modulo\n");
 
@@ -67,12 +68,17 @@ int fan_init(void)
 	if (retval)
 		kobject_put(thermal_kobj);
 
-	list_for_each_entry(tz, &thermal_tz_list, node);
-	
-	printk(KERN_INFO "FanCtlModule: id = %d\n", tz->id);
-	
+	list_for_each_entry(pos, &thermal_tz_list, node)
+	{
+		tz = pos;
+		break;
+	}
 
+	thermal_zone_get_temp(tz, &temp);
 
+	//printk(KERN_INFO "FanCtlModule: Hay un error\n");
+	printk(KERN_INFO "FanCtlModule: name = %s\n", tz->type);
+	printk(KERN_INFO "FanCtlModule: temp = %d\n", temp);
 
 	return 0;
 }
