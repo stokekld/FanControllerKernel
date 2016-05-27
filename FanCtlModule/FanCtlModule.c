@@ -67,10 +67,10 @@ int fan_init(void)
 	if (retval)
 		kobject_put(thermal_kobj);
 
-	list_for_each_entry(tz, &thermal_tz_list, node)
-	{
-		printk(KERN_INFO "FanCtlModule: id = %d\n", tz->id);
-	}
+	list_for_each_entry(tz, &thermal_tz_list, node);
+	
+	printk(KERN_INFO "FanCtlModule: id = %d\n", tz->id);
+	
 
 
 
