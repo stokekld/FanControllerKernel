@@ -11,9 +11,12 @@ int fan_init(void)
 
 	printk(KERN_INFO "FanCtlModule: Se cargo el modulo\n");
 
-	crea_arbol_sysfs();
-	obtiene_thermal_zone();
+	if(!crea_arbol_sysfs())
+		return -ENODEV;
 
+	if(!obtiene_thermal_zone())
+		return -ENODEV;
+	
 	return 0;
 }
 

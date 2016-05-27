@@ -44,19 +44,31 @@ int crea_arbol_sysfs()
 	// Creando kset para FanController en /sys/fan_controller
 	fc_kset = kset_create_and_add("fan_controller", NULL, NULL);
 	if (!fc_kset)
-		return -ENOMEM;
+	{
+		printk(KERN_INFO "FanCtlModule: Kset no creado\n");
+		return 0;
+	}
 
 	// Creando kobject dentro de kset
 	sensor_kobj = kobject_create_and_add("sensor", &fc_kset->kobj);
 	if (!sensor_kobj)
-		return -ENOMEM;
+	{
+		printk(KERN_INFO "FanCtlModule: Kobject no creado\n");
+		return 0;
+	}
 
 	// Creando archivo dentro de kobject
 	retval = sysfs_create_file(sensor_kobj, &temp_attribute.attr);
 	if (retval)
+	{
+		printk(KERN_INFO "FanCtlModule: Archivo sensor no creado\n");
 		kobject_put(sensor_kobj);
+		return 0;
+	}
 
-	return 0;
+	printk(KERN_INFO "FanCtlModule: Arbol sysfs creado\n");
+
+	return 1;
 }
 
 int destruye_arbol_sysfs()
@@ -66,5 +78,5 @@ int destruye_arbol_sysfs()
 	// Destruyendo kset
 	kset_unregister(fc_kset);
 
-	return 0;
+	return 1;
 }
