@@ -69,8 +69,10 @@ int destruye_arbol_sysfs()
 	return 1;
 }
 
+
 int actualizando_archivo_temp(int temperatura)
 {
+	// Actualiza el dato del archivo temp
 	temp = temperatura;
 
 	return 1;
