@@ -5,11 +5,44 @@
 #include <linux/kernel.h>
 #include <linux/init.h>
 
+// kset
 static struct kset *fc_kset;
+
+// kobject
+static struct kobject *thermal_kobj;
+
+// Archivo dentro de kobject
+static int zone0;
+
+// Funcion para leer del archivo
+static ssize_t zone0_show(struct kobject *kobj, struct kobj_attribute *attr,
+			char *buf)
+{
+	return sprintf(buf, "%d\n", zone0);
+}
+
+// Funcion para agregar al archivo
+static ssize_t zone0_store(struct kobject *kobj, struct kobj_attribute *attr,
+			 const char *buf, size_t count)
+{
+	int ret;
+
+	ret = kstrtoint(buf, 10, &zone0);
+	if (ret < 0)
+		return ret;
+
+	return count;
+}
+
+// Propiedades del archivo
+static struct kobj_attribute zone0_attribute =
+	__ATTR(zone0, 0664, zone0_show, zone0_store);
+
 
 // Inicio del modulo
 int fan_init(void)
 {
+	int retval;
 
 	printk(KERN_INFO "FanCtlModule: Se cargo el modulo\n");
 
@@ -18,12 +51,24 @@ int fan_init(void)
 	if (!fc_kset)
 		return -ENOMEM;
 
+	// Creando kobject dentro de kset
+	thermal_kobj = kobject_create_and_add("thermal", &fc_kset->kobj);
+	if (!thermal_kobj)
+		return -ENOMEM;
+
+	// Creando archivo dentro de kobject
+	retval = sysfs_create_file(thermal_kobj, &zone0_attribute.attr);
+	if (retval)
+		kobject_put(thermal_kobj);
+
 	return 0;
 }
 
 // Salida del modulo
 void fan_cleanup(void)
 {
+	// Destruyendo kobject
+	kobject_put(thermal_kobj);
 	// Destruyendo kset
 	kset_unregister(fc_kset);
 
