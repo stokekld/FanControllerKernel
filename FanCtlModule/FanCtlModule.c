@@ -1,9 +1,15 @@
 #include <linux/kobject.h>
 #include <linux/string.h>
 #include <linux/sysfs.h>
+#include <linux/thermal.h>
+#include <linux/slab.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/init.h>
+
+
+struct thermal_zone_device *tz = NULL;
+extern struct list_head thermal_tz_list;
 
 // kset
 static struct kset *fc_kset;
@@ -42,7 +48,7 @@ static struct kobj_attribute zone0_attribute =
 // Inicio del modulo
 int fan_init(void)
 {
-	int retval;
+	int retval, queonda = 0;
 
 	printk(KERN_INFO "FanCtlModule: Se cargo el modulo\n");
 
@@ -60,6 +66,14 @@ int fan_init(void)
 	retval = sysfs_create_file(thermal_kobj, &zone0_attribute.attr);
 	if (retval)
 		kobject_put(thermal_kobj);
+
+	list_for_each_entry(tz, &thermal_tz_list, node)
+	{
+		queonda++;
+	}
+
+	printk(KERN_INFO "FanCtlModule: Que onda %d\n", queonda);
+
 
 	return 0;
 }
