@@ -48,7 +48,7 @@ static struct kobj_attribute zone0_attribute =
 // Inicio del modulo
 int fan_init(void)
 {
-	int retval, queonda = 0;
+	int retval;
 
 	printk(KERN_INFO "FanCtlModule: Se cargo el modulo\n");
 
@@ -69,10 +69,9 @@ int fan_init(void)
 
 	list_for_each_entry(tz, &thermal_tz_list, node)
 	{
-		queonda++;
+		printk(KERN_INFO "FanCtlModule: id = %d\n", tz->id);
 	}
 
-	printk(KERN_INFO "FanCtlModule: Que onda %d\n", queonda);
 
 
 	return 0;
