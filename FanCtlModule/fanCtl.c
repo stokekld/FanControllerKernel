@@ -16,6 +16,7 @@ int fan_init(void)
 		return -ENODEV;
 
 	if(!obtiene_thermal_zone())
+	
 		return -ENODEV;
 
 	crea_hilo();
