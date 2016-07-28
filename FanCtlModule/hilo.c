@@ -15,7 +15,6 @@ int hilo_function(void *data)
 
 	while(!kthread_should_stop())
 	{
-		printk(KERN_INFO "FanCtlModule: Temperatura %d\n", obtiene_temp());
 		actualizando_archivo_temp(obtiene_temp());
 
 		schedule_timeout_interruptible(HZ/2);
